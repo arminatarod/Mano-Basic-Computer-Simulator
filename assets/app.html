@@ -1,13 +1,455 @@
 <html>
-  <head>
-    <title>MyApp -- (edit this title in app.html)</title>
-    <style>
-    body {
-      font-family: -apple-system, 'Segoe UI Light', Ubuntu, Arial, sans-serif;
-    }
-    </style>
-  </head>
-  <body>
-    <h1>Hello World!</h1>
-  </body>
+	<head>
+		<title>A simulator for Mano's basic computer</title>
+		<style>
+			::-webkit-scrollbar {
+				width: 10px;
+			}
+			::-webkit-scrollbar-track {
+				background: rgb(230, 230, 230); 
+			}
+			::-webkit-scrollbar-thumb {
+				background: #888; 
+			}
+			::-webkit-scrollbar-thumb:hover {
+				background: #555; 
+			}
+
+			* {
+				box-sizing: border-box;
+				font-family: "consolas";
+			}
+
+			body {
+				margin: 0;
+				background-color: rgb(240, 240, 240);
+				position: absolute;
+			}
+
+			div.code {
+				display: inline-block;
+				width: 42.5vw;
+				height: 30vw;
+				margin-top: 5vw;
+				margin-left: 2.5vw;
+				background-color: rgb(255, 255, 255);
+				overflow: auto;
+			}
+
+			div.code table {
+				width: 100%;
+				font-size: 1.25vw;
+				border-collapse: collapse;
+				line-height: 3vw;
+			}
+			div.code table tr {
+				height: 3vw;
+			}
+			div.code table td {
+				padding: 0vw 0.5vw;
+				text-align: left;
+			}
+			div.code table th {
+				padding: 0vw 0.5vw;
+				text-align: center;
+				position: sticky;
+				top: 0;
+				z-index: 1000;
+				background-color: rgb(50, 50, 50);
+				border: none;
+				color: rgb(220, 220, 220);
+			}
+			div.code table td input {
+				width: 100%;
+				height: 2.5vw;
+				line-height: 2.5vw;
+				margin: 0.25vw 0vw;
+				padding: 0;
+				border: none;
+				outline: none;
+				font-size: 1.25vw;
+				color: inherit;
+			}
+			div.code table td.rowLine {
+				opacity: 0.5;
+				border-right: solid 0.001vw rgb(200, 200, 200);
+				width: 7%;
+			}
+			div.code table td.rowLabel {
+				color: rgb(30, 120, 160);
+				border-right: solid 0.001vw rgb(200, 200, 200);
+				width: 10%;
+			}
+			div.code table td.rowInstruction {
+				color: rgb(0, 0, 0);
+				border-right: solid 0.001vw rgb(200, 200, 200);
+				width: 15%;
+			}
+			div.code table td.rowComment {
+				color: rgb(30, 130, 10);
+				border-right: solid 0.001vw rgb(200, 200, 200);
+			}
+
+			div.memory {
+				display: inline-block;
+				width: 17.5vw;
+				height: 30vw;
+				margin-top: 5vw;
+				margin-left: 2.5vw;
+				background-color: rgb(255, 255, 255);
+				overflow: auto;
+			}
+
+			div.memory table {
+				width: 100%;
+				font-size: 1.25vw;
+				border-collapse: collapse;
+				line-height: 3vw;
+			}
+			div.memory table tr {
+				height: 3vw;
+			}
+			div.memory table td {
+				padding: 0vw 0.5vw;
+				text-align: left;
+			}
+			div.memory table th {
+				padding: 0vw 0.5vw;
+				text-align: center;
+				position: sticky;
+				top: 0;
+				z-index: 1000;
+				background-color: rgb(50, 50, 50);
+				color: rgb(220, 220, 220);
+			}
+			div.memory table td.rowLine {
+				opacity: 0.5;
+				border-right: solid 0.001vw rgb(200, 200, 200);
+				width: 20%;
+			}
+			div.memory table td.rowData {
+				color: rgb(30, 120, 160);
+			}
+
+			div.variables {
+				display: inline-block;
+				width: 30vw;
+				height: 30vw;
+				margin-top: 5vw;
+				margin-left: 2.5vw;
+				background-color: rgb(255, 255, 255);
+			}
+			div.variables table {
+				width: 100%;
+				font-size: calc(30vw / 36);
+				border-collapse: collapse;
+				line-height: calc(30vw / 31);
+				margin-top: calc((30vw - (30vw / 31 * 30)) / 2);
+			}
+			div.variables table tr {
+				height: calc(30vw / 31);
+			}
+			div.variables table tr:nth-child(even) {
+				opacity: 0.2;
+			}
+			div.variables table td {
+				padding: 0vw 1vw;
+				text-align: left;
+			}
+			div.variables table td input {
+				height: calc(30vw / 31);
+				line-height: calc(30vw / 31);
+				margin: 0;
+				padding: 0;
+				border: solid thin rgb(200, 200, 200);
+				outline: none;
+				font-size: calc(30vw / 36);
+				color: inherit;
+			}
+
+			button {
+				border: none;
+				font-size: 1.25vw;
+				line-height: 3vw;
+				text-align: center;
+				vertical-align: middle;
+				border-radius: 0.5vw;
+				color: rgb(255, 255, 255);
+				margin-top: 2vw;
+				margin-left: 2.5vw;
+				padding: 0.25vw 2vw 0 2vw;
+				transition: 0.1s ease;
+				cursor: pointer;
+			}
+
+			button:hover {
+				background-color: rgb(0, 0, 0) !important;
+			}
+			button.rightToLeft {
+				float: right;
+				margin-left: 0;
+				margin-right: 2.5vw;
+			}
+
+			p {
+				font-size: 1.25vw;
+				line-height: 2.5vw;
+				height: 2.5vw;
+				margin: 1vw 2.5vw;
+				padding: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="code">
+			<table>
+				<tr id="codeTableHeader">
+					<th>Line</th>
+					<th>Label</th>
+					<th>Instruction</th>
+					<th>Comment</th>
+				</tr>
+			</table>
+		</div><!--
+		--><script type="text/javascript">
+			//Initialize the code table with 5000 rows
+			var html = "";
+			for (var i = 0; i < 5000; i++) {
+				html += "<tr class=\"codeRow\" style=\"border-top: solid 0.001vw rgb(200, 200, 200);\">";
+				html += "<td class=\"rowLine\">" + i.toString().toUpperCase() + "</td>";
+				html += "<td class=\"rowLabel\"><input type=\"text\" class=\"rowLabelInput\"></td>";
+				html += "<td class=\"rowInstruction\"><input type=\"text\" class=\"rowInstructionInput\"></td>";
+				html += "<td class=\"rowComment\"><input type=\"text\" class=\"rowCommentInput\"></td>";
+				html += "</tr>";
+			}
+			document.getElementById("codeTableHeader").insertAdjacentHTML("afterend", html);
+		</script><!--
+		--><div class="memory">
+			<table>
+				<tr id="memoryTableHeader">
+					<th>Line</th>
+					<th>Data</th>
+				</tr>
+			</table>
+		</div><!--
+		--><script type="text/javascript">
+			//Initialize the memory table with 2^12 rows
+			var html = "";
+			for (var i = 0; i < 4096; i++) {
+				html += "<tr class=\"memoryRow\" style=\"border-top: solid 0.001vw rgb(200, 200, 200);\">";
+				html += "<td class=\"rowLine\">" + i.toString(16).toUpperCase() + "</td>";
+				html += "<td class=\"rowData\"></td>";
+				html += "</tr>";
+			}
+			document.getElementById("memoryTableHeader").insertAdjacentHTML("afterend", html);
+		</script><!--
+		--><div class="variables">
+			<table>
+				<tr style="color: rgb(255, 0, 0);">
+					<td>IR</td>
+					<td id="IR"></td>
+					<td id="IRHEX"></td>
+				</tr>
+				<tr style="color: rgb(255, 0, 0);">
+					<td></td>
+					<td id="preIR"></td>
+					<td id="preIRHEX"></td>
+				</tr>
+				<tr style="color: rgb(255, 0, 0);">
+					<td>I</td>
+					<td id="I"></td>
+					<td id="IHEX"></td>
+				</tr>
+				<tr style="color: rgb(255, 0, 0);">
+					<td></td>
+					<td id="preI"></td>
+					<td id="preIHEX"></td>
+				</tr>
+				<tr style="color: rgb(30, 120, 160);">
+					<td>AC</td>
+					<td id="AC"></td>
+					<td id="ACHEX"></td>
+				</tr>
+				<tr style="color: rgb(30, 120, 160);">
+					<td></td>
+					<td id="preAC"></td>
+					<td id="preACHEX"></td>
+				</tr>
+				<tr style="color: rgb(150, 90, 40);">
+					<td>DR</td>
+					<td id="DR"></td>
+					<td id="DRHEX"></td>
+				</tr>
+				<tr style="color: rgb(150, 90, 40);">
+					<td></td>
+					<td id="preDR"></td>
+					<td id="preDRHEX"></td>
+				</tr>
+				<tr style="color: rgb(150, 150, 150);">
+					<td>PC</td>
+					<td id="PC"></td>
+					<td id="PCHEX"></td>
+				</tr>
+				<tr style="color: rgb(150, 150, 150);">
+					<td></td>
+					<td id="prePC"></td>
+					<td id="prePCHEX"></td>
+				</tr>
+				<tr style="color: rgb(40, 150, 100);">
+					<td>AR</td>
+					<td id="AR"></td>
+					<td id="ARHEX"></td>
+				</tr>
+				<tr style="color: rgb(40, 150, 100);">
+					<td></td>
+					<td id="preAR"></td>
+					<td id="preARHEX"></td>
+				</tr>
+				<tr style="color: rgb(180, 30, 0);">
+					<td>M[AR]</td>
+					<td id="MAR"></td>
+					<td id="MARHEX"></td>
+				</tr>
+				<tr style="color: rgb(180, 30, 0);">
+					<td></td>
+					<td id="preMAR"></td>
+					<td id="preMARHEX"></td>
+				</tr>
+				<tr style="color: rgb(190, 110, 0);">
+					<td>E</td>
+					<td id="E"></td>
+					<td id="EHEX"></td>
+				</tr>
+				<tr style="color: rgb(190, 110, 0);">
+					<td></td>
+					<td id="preE"></td>
+					<td id="preEHEX"></td>
+				</tr>
+				<tr style="color: rgb(0, 0, 0);">
+					<td>TR</td>
+					<td id="TR"></td>
+					<td id="TRHEX"></td>
+				</tr>
+				<tr style="color: rgb(0, 0, 0);">
+					<td></td>
+					<td id="preTR"></td>
+					<td id="preTRHEX"></td>
+				</tr>
+				<tr style="color: rgb(150, 150, 150);">
+					<td>R</td>
+					<td id="R"></td>
+					<td id="RHEX"></td>
+				</tr>
+				<tr style="color: rgb(150, 150, 150);">
+					<td></td>
+					<td id="preR"></td>
+					<td id="preRHEX"></td>
+				</tr>
+				<tr style="color: rgb(130, 110, 30);">
+					<td>IEN</td>
+					<td id="IEN"></td>
+					<td id="IENHEX"></td>
+				</tr>
+				<tr style="color: rgb(130, 110, 30);">
+					<td></td>
+					<td id="preIEN"></td>
+					<td id="preIENHEX"></td>
+				</tr>
+				<!-- Some register values are given by the user -->
+				<tr style="color: rgb(190, 110, 0);">
+					<td>FGI</td>
+					<td><input type="text" id="FGI" value="0"></td>
+					<td id="FGIHEX"></td>
+				</tr>
+				<tr style="color: rgb(190, 110, 0);">
+					<td></td>
+					<td id="preFGI"></td>
+					<td id="preFGIHEX"></td>
+				</tr>
+				<tr style="color: rgb(190, 110, 0);">
+					<td>FGO</td>
+					<td><input type="text" id="FGO" value="0"></td>
+					<td id="FGOHEX"></td>
+				</tr>
+				<tr style="color: rgb(190, 110, 0);">
+					<td></td>
+					<td id="preFGO"></td>
+					<td id="preFGOHEX"></td>
+				</tr>
+				<tr style="color: rgb(110, 10, 10);">
+					<td>INPR</td>
+					<td><input type="text" id="INPR" value="00000000"></td>
+					<td id="INPRHEX"></td>
+				</tr>
+				<tr style="color: rgb(110, 10, 10);">
+					<td></td>
+					<td id="preINPR"></td>
+					<td id="preINPRHEX"></td>
+				</tr>
+				<tr style="color: rgb(10, 30, 90);">
+					<td>OUTR</td>
+					<td id="OUTR"></td>
+					<td id="OUTRHEX"></td>
+				</tr>
+				<tr style="color: rgb(10, 30, 90);">
+					<td></td>
+					<td id="preOUTR"></td>
+					<td id="preOUTRHEX"></td>
+				</tr>
+			</table>
+		</div>
+		<script type="text/javascript">
+			//Calculate and show the HEX conversion of the register values in the table
+			//The padStart at the end, ensures that the string has a fixed number of characters (the rest will be leading zeros)
+			function makeHEXs() {
+				IRHEX.innerHTML = parseInt(IR.innerHTML, 2).toString(16).padStart(4, "0").toUpperCase();
+				preIRHEX.innerHTML = parseInt(preIR.innerHTML, 2).toString(16).padStart(4, "0").toUpperCase();
+				IHEX.innerHTML = parseInt(I.innerHTML, 2).toString(16).toUpperCase();
+				preIHEX.innerHTML = parseInt(preI.innerHTML, 2).toString(16).toUpperCase();
+				ACHEX.innerHTML = parseInt(AC.innerHTML, 2).toString(16).padStart(4, "0").toUpperCase();
+				preACHEX.innerHTML = parseInt(preAC.innerHTML, 2).toString(16).padStart(4, "0").toUpperCase();
+				DRHEX.innerHTML = parseInt(DR.innerHTML, 2).toString(16).padStart(4, "0").toUpperCase();
+				preDRHEX.innerHTML = parseInt(preDR.innerHTML, 2).toString(16).padStart(4, "0").toUpperCase();
+				PCHEX.innerHTML = parseInt(PC.innerHTML, 2).toString(16).padStart(3, "0").toUpperCase();
+				prePCHEX.innerHTML = parseInt(prePC.innerHTML, 2).toString(16).padStart(3, "0").toUpperCase();
+				ARHEX.innerHTML = parseInt(AR.innerHTML, 2).toString(16).padStart(3, "0").toUpperCase();
+				preARHEX.innerHTML = parseInt(preAR.innerHTML, 2).toString(16).padStart(3, "0").toUpperCase();
+				MARHEX.innerHTML = parseInt(MAR.innerHTML, 2).toString(16).padStart(4, "0").toUpperCase();
+				preMARHEX.innerHTML = parseInt(preMAR.innerHTML, 2).toString(16).padStart(4, "0").toUpperCase();
+				EHEX.innerHTML = parseInt(E.innerHTML, 2).toString(16).toUpperCase();
+				preEHEX.innerHTML = parseInt(preE.innerHTML, 2).toString(16).toUpperCase();
+				TRHEX.innerHTML = parseInt(TR.innerHTML, 2).toString(16).padStart(4, "0").toUpperCase();
+				preTRHEX.innerHTML = parseInt(preTR.innerHTML, 2).toString(16).padStart(4, "0").toUpperCase();
+				INPRHEX.innerHTML = parseInt(INPR.value, 2).toString(16).padStart(2, "0").toUpperCase();
+				preINPRHEX.innerHTML = parseInt(preINPR.innerHTML, 2).toString(16).padStart(2, "0").toUpperCase();
+				OUTRHEX.innerHTML = parseInt(OUTR.innerHTML, 2).toString(16).padStart(2, "0").toUpperCase();
+				preOUTRHEX.innerHTML = parseInt(preOUTR.innerHTML, 2).toString(16).padStart(2, "0").toUpperCase();
+				RHEX.innerHTML = parseInt(R.innerHTML, 2).toString(16).toUpperCase();
+				preRHEX.innerHTML = parseInt(preR.innerHTML, 2).toString(16).toUpperCase();
+				IENHEX.innerHTML = parseInt(IEN.innerHTML, 2).toString(16).toUpperCase();
+				preIENHEX.innerHTML = parseInt(preIEN.innerHTML, 2).toString(16).toUpperCase();
+				FGIHEX.innerHTML = parseInt(FGI.value, 2).toString(16).toUpperCase();
+				preFGIHEX.innerHTML = parseInt(preFGI.innerHTML, 2).toString(16).toUpperCase();
+				FGOHEX.innerHTML = parseInt(FGO.value, 2).toString(16).toUpperCase();
+				preFGOHEX.innerHTML = parseInt(preFGO.innerHTML, 2).toString(16).toUpperCase();
+			}
+		</script>
+		<button style="background-color: rgb(10, 130, 10);" onclick="assemble()">Assemble</button>
+		<button style="background-color: rgb(30, 120, 160);" onclick="showLoadFile()">Load from txt</button>
+		<button style="background-color: rgb(30, 120, 160);" onclick="showSaveFile()">Save to txt</button>
+		<button style="background-color: rgb(150, 0, 0);" class="rightToLeft" onclick="executeAll()">Execute all</button>
+		<button style="background-color: rgb(200, 80, 0);" class="rightToLeft" onclick="executeNext()">Execute next</button>
+		<button style="background-color: rgb(150, 150, 100);" class="rightToLeft" onclick="previousState()">Previous</button>
+		<p id="log"></p>
+		<div style="width: 100%; height: 5vw;"></div>
+		<script type="text/javascript">
+			//The finished variable indicates whether the program has executed until it has reached a halt (For the Execute all button)
+			var finished = true;
+			//The executeAll function keeps running executeNext until a halt has been reached
+			function executeAll() {
+				while (!finished)
+					executeNext();
+			}
+		</script>
+	</body>
 </html>

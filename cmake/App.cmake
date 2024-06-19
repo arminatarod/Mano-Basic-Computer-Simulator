@@ -32,7 +32,6 @@ set(VERSION "1.3.0")
 set(BASE_URL "github.com/ultralight-ux/Ultralight/releases/download")
 
 ExternalProject_Add(UltralightSDK
-  URL https://${BASE_URL}/v${VERSION}/ultralight-sdk-${VERSION}-${PLATFORM}-${ARCHITECTURE}.7z
   SOURCE_DIR "${SDK_ROOT}"
   BUILD_IN_SOURCE 1
   CONFIGURE_COMMAND ""
