@@ -1,4 +1,4 @@
-# ultralight-quick-start
+# Mano's Basic Computer Simulator Quick Start
 
 __Clone this repo to try Mano's basic computer simulator!__
 
