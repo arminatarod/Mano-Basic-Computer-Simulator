@@ -789,13 +789,21 @@ JSValueRef previous_state(JSContextRef ctx, JSObjectRef function, JSObjectRef th
 std::string exec(const char* cmd) {
 	std::string result = "";
     std::array<char, 128> buffer;
+    #if defined(_WIN32) || defined(_WIN64)
     FILE* pPipe = _popen(cmd, "r");
+    #else
+    FILE* pPipe = popen(cmd, "r");
+    #endif
     if (pPipe == NULL)
         return "***Failed***";
     while (fgets(buffer.data(), 128, pPipe) != NULL)
         result += buffer.data();
     int endOfFileVal = feof(pPipe);
+    #if defined(_WIN32) || defined(_WIN64)
     int closeReturnVal = _pclose(pPipe);
+    #else
+    int closeReturnVal = pclose(pPipe);
+    #endif
     if (!endOfFileVal)
         return "***Failed***";
 	//Remove the \n at the end
