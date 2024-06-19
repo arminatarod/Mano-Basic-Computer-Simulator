@@ -806,18 +806,20 @@ std::string exec(const char* cmd) {
     #endif
     if (!endOfFileVal)
         return "***Failed***";
-	//Remove the \n at the end
-	result.pop_back();
-	 //For windows operating systems
+	//For windows operating systems
 	#if defined(_WIN32) || defined(_WIN64)
-	if (result == "Cancel\n") //Remove the other \n at the end
+		//Remove the \n at the end
 		result.pop_back();
-	else //Remove the OK and \n at the beginning
-		result.erase(0, 3);
+		if (result == "Cancel\n") //Remove the other \n at the end
+			result.pop_back();
+		else //Remove the OK and \n at the beginning
+			result.erase(0, 3);
 	//For linux operating systems
 	#else
-	if (result == "")
-		return "Cancel";
+		if (result == "")
+			return "Cancel";
+		else
+			result.pop_back(); //Remove the \n at the end
 	#endif
 	return result;
 }
@@ -895,11 +897,17 @@ JSValueRef show_load_file(JSContextRef ctx, JSObjectRef function, JSObjectRef th
 		else {
 			//Store the data from the file into the code table in the GUI
 			for (int i = 0; i < result.size(); i++) {
-				command += "document.getElementsByClassName('rowLabelInput')[" + std::to_string(i) + "].value = '" + result[i][0] + "';";
-				command += "document.getElementsByClassName('rowInstructionInput')[" + std::to_string(i) + "].value = '" + result[i][1] + "';";
-				command += "document.getElementsByClassName('rowCommentInput')[" + std::to_string(i) + "].value = '" + result[i][2] + "';";
+				command = "document.getElementsByClassName('rowLabelInput')[" + std::to_string(i) + "].value = '" + result[i][0] + "';";
+				script = JSStringCreateWithUTF8CString(command.c_str());
+				JSEvaluateScript(ctx, script, 0, 0, 0, 0);
+				command = "document.getElementsByClassName('rowInstructionInput')[" + std::to_string(i) + "].value = '" + result[i][1] + "';";
+				script = JSStringCreateWithUTF8CString(command.c_str());
+				JSEvaluateScript(ctx, script, 0, 0, 0, 0);
+				command = "document.getElementsByClassName('rowCommentInput')[" + std::to_string(i) + "].value = '" + result[i][2] + "';";
+				script = JSStringCreateWithUTF8CString(command.c_str());
+				JSEvaluateScript(ctx, script, 0, 0, 0, 0);
 			}
-			command += "log.innerHTML = 'File successfully loaded.';log.style.color = 'rgb(10, 110, 10)';";
+			command = "log.innerHTML = 'File successfully loaded.';log.style.color = 'rgb(10, 110, 10)';";
 			script = JSStringCreateWithUTF8CString(command.c_str());
 			JSEvaluateScript(ctx, script, 0, 0, 0, 0);
 		}
