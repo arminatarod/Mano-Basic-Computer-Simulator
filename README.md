@@ -27,4 +27,4 @@ Navigate to `Mano-Basic-Computer-Simulator/build` and run `MyApp` to launch the 
 
 Navigate to `Mano-Basic-Computer-Simulator/build/Release` and run `MyApp` to launch the program.
 
-## The documentation of the program can be found in "A Simulator for Mano's Basic Computer.pdf"
+### The documentation of the program can be found in "A Simulator for Mano's Basic Computer.pdf"
