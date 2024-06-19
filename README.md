@@ -1,6 +1,6 @@
 # ultralight-quick-start
 
-__Clone this repo to try a simple Ultralight app!__
+__Clone this repo to try Mano's basic computer simulator!__
 
 This is a minimal Ultralight app you can use with the [Writing Your First App](https://docs.ultralig.ht/docs/writing-your-first-app) article in the Ultralight documentation.
 
@@ -13,22 +13,18 @@ Before you build and run, you'll need to [install the prerequisites](https://doc
 To clone the repo and build, run the following:
 
 ```shell
-git clone https://github.com/ultralight-ux/ultralight-quick-start
-cd ultralight-quick-start
+git clone https://github.com/arminatarod/Mano-Basic-Computer-Simulator
+cd Mano-Basic-Computer-Simulator
 cmake -B build
-cmake --build build --config Release
+cmake --build build --config Release --clean-first
 ```
 
 ## 3. Run the app
 
 ### On macOS and Linux
 
-Navigate to `ultralight-quick-start/build` and run `MyApp` to launch the program.
+Navigate to `Mano-Basic-Computer-Simulator/build` and run `MyApp` to launch the program.
 
 ### On Windows
 
-Navigate to `ultralight-quick-start/build/Release` and run `MyApp` to launch the program.
-
-## Further Reading
-
-Follow the [Writing Your First App](https://docs.ultralig.ht/docs/writing-your-first-app) guide and other tutorials in the documentation for more info.
+Navigate to `Mano-Basic-Computer-Simulator/build/Release` and run `MyApp` to launch the program.
