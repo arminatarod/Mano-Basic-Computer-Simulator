@@ -32,7 +32,6 @@ set(VERSION "1.3.0")
 set(BASE_URL "github.com/ultralight-ux/Ultralight/releases/download")
 
 ExternalProject_Add(UltralightSDK
-  URL https://${BASE_URL}/v${VERSION}/ultralight-sdk-${VERSION}-${PLATFORM}-${ARCHITECTURE}.7z
   SOURCE_DIR "${SDK_ROOT}"
   BUILD_IN_SOURCE 1
   CONFIGURE_COMMAND ""
@@ -85,6 +84,12 @@ MACRO(ADD_APP source_list)
   # Copy assets to assets path
   add_custom_command(TARGET ${APP_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/assets/" "${ASSETS_PATH}")
+
+  # Copy PowerShell scripts to build release directory
+  add_custom_command(TARGET ${APP_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/openfiledialog-txt.ps1" $<TARGET_FILE_DIR:${APP_NAME}>)
+  add_custom_command(TARGET ${APP_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/savefiledialog-txt.ps1" $<TARGET_FILE_DIR:${APP_NAME}>)
 
   if(${ENABLE_INSPECTOR})
     # Copy inspector to assets directory
