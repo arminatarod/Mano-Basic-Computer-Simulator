@@ -29,4 +29,4 @@ Navigate to `Mano-Basic-Computer-Simulator/build/Release` and run `MyApp` to lau
 
 ## 4. Documentation
 
-### The documentation of the program can be read in "A Simulator for Mano's Basic Computer.pdf"
+The documentation of the program can be read in "A Simulator for Mano's Basic Computer.pdf"
